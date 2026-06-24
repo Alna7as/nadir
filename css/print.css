@@ -1,1 +1,74 @@
+/* =============================================
+   THERMAL PRINT STYLESHEET
+   58mm Paper Roll - POS Receipt Format
+   Monospace font for column alignment
+   ============================================= */
 
+/* The receipt preview shown on screen */
+.receipt-preview {
+  font-family: 'IBM Plex Mono', 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #000;
+  background: #fff;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 12px 10px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.receipt-preview .r-center  { text-align: center; }
+.receipt-preview .r-right   { text-align: right; }
+.receipt-preview .r-bold    { font-weight: 700; }
+.receipt-preview .r-large   { font-size: 15px; font-weight: 700; }
+.receipt-preview .r-small   { font-size: 10px; }
+.receipt-preview .r-divider { display: block; letter-spacing: -1px; }
+
+/* ---- ACTUAL PRINT PAGE ---- */
+@page {
+  margin: 0;
+  size: 58mm auto;
+}
+
+@media print {
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide everything except the print area */
+  body > *:not(#print-root) {
+    display: none !important;
+  }
+
+  #print-root {
+    display: block !important;
+    width: 58mm !important;
+    margin: 0 !important;
+    padding: 2mm !important;
+  }
+
+  .receipt-content {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.4 !important;
+    color: #000 !important;
+    background: #fff !important;
+    width: 54mm !important;
+    word-break: break-word !important;
+  }
+
+  .receipt-content .r-center { text-align: center !important; }
+  .receipt-content .r-right  { text-align: right !important; }
+  .receipt-content .r-bold   { font-weight: bold !important; }
+  .receipt-content .r-large  { font-size: 11pt !important; font-weight: bold !important; }
+  .receipt-content .r-small  { font-size: 7pt !important; }
+  .receipt-content .r-divider {
+    display: block !important;
+    overflow: hidden !important;
+  }
+}
