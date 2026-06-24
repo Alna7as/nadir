@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="الحبيب للتجارة والتوزيع">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0b1f33">
+  <link rel="preconnect" href="https://ucqqejxlhgeslenowzuk.supabase.co" crossorigin>
+  <link rel="dns-prefetch" href="https://ucqqejxlhgeslenowzuk.supabase.co">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/mm-logo.png">
+  <link rel="shortcut icon" href="icons/mm-logo.png">
+  <link rel="apple-touch-icon" href="icons/mm-logo.png">
+  <title>تسجيل الدخول — الحبيب للتجارة والتوزيع</title>
+  <style>
+    :root {
+      --bg:          #0b1f33;
+      --bg2:         #102943;
+      --card:        #133252;
+      --border:      #20476c;
+      --border-lit:  #29547d;
+      --accent:      #67b7f7;
+      --accent2:     #55d6be;
+      --glow:        rgba(103,183,247,0.14);
+      --glow-strong: rgba(103,183,247,0.22);
+      --danger:      #e05252;
+      --success:     #55d6be;
+      --text:        #f4f8fc;
+      --text2:       #d6e6f5;
+      --text3:       #9fb8cf;
+      --mono:        Consolas, 'Courier New', monospace;
+      --main:        'Segoe UI', Tahoma, Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: var(--main);
+	      background: linear-gradient(180deg, #0b1f33 0%, #102943 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* ══════════════════════════════════════
+       ANIMATED BACKGROUND
+    ══════════════════════════════════════ */
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    /* Grid lines */
+    .bg-scene::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(31,47,83,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31,47,83,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: gridPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes gridPulse {
+      0%,100% { opacity: 0.6; }
+      50%      { opacity: 1; }
+    }
+
+    /* Ambient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: orbFloat linear infinite;
+    }
+    .orb-1 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(157,192,245,0.14), transparent 70%);
+      top: -100px; right: -100px;
+      animation-duration: 20s;
+      animation-name: orbFloat1;
+    }
+    .orb-2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(127,217,167,0.10), transparent 70%);
+      bottom: -50px; left: -50px;
+      animation-duration: 25s;
+      animation-name: orbFloat2;
+    }
+    .orb-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(31,47,83,0.06), transparent 70%);
+      top: 50%; left: 30%;
+      animation-duration: 15s;
+      animation-name: orbFloat3;
+    }
+
+    @keyframes orbFloat1 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%     { transform: translate(-30px, 40px) scale(1.1); }
+      66%     { transform: translate(20px, -20px) scale(0.95); }
+    }
+    @keyframes orbFloat2 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(40px, -30px) scale(1.15); }
+    }
+    @keyframes orbFloat3 {
+      0%,100% { transform: translate(0,0) scale(1); opacity: 0.5; }
+      50%     { transform: translate(-20px, 30px) scale(1.2); opacity: 1; }
+    }
+
+    /* Scanning line effect */
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(31,47,83,0.0) 20%,
+        rgba(31,47,83,0.18) 50%,
+        rgba(31,47,83,0.0) 80%,
+        transparent 100%);
+      animation: scan 6s linear infinite;
+      top: 0;
+    }
+    @keyframes scan {
+      0%   { top: -2px; opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    /* ══════════════════════════════════════
+       MAIN LAYOUT
+    ══════════════════════════════════════ */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px;
+    }
+
+    /* ══════════════════════════════════════
+       LOGIN CARD
+    ══════════════════════════════════════ */
+    .login-card {
+      width: 100%;
+      max-width: 392px;
+      background: var(--card);
+      border: 1px solid var(--border-lit);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      position: relative;
+      overflow: hidden;
+      animation: cardAppear 0.7s cubic-bezier(0.34,1.4,0.64,1) both;
+      box-shadow:
+        0 0 0 1px rgba(31,47,83,0.05),
+        0 24px 64px rgba(42,54,71,0.12),
+        0 0 80px rgba(157,192,245,0.08);
+    }
+
+    @keyframes cardAppear {
+      from { opacity: 0; transform: translateY(40px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Glowing top border */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(157,192,245,0.4) 30%,
+        rgba(31,47,83,0.5) 50%,
+        rgba(127,217,167,0.45) 70%,
+        transparent
+      );
+      animation: topGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes topGlow {
+      from { opacity: 0.5; }
+      to   { opacity: 1; box-shadow: 0 0 20px rgba(31,47,83,0.12); }
+    }
+
+    /* Corner accents */
+    .login-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 60px; height: 60px;
+      border-top: 2px solid rgba(157,192,245,0.45);
+      border-right: 2px solid rgba(127,217,167,0.45);
+      border-radius: 0 0 0 0;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════
+       LOGO / HEADER
+    ══════════════════════════════════════ */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 24px;
+      animation: fadeDown 0.6s ease 0.2s both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo-icon {
+      width: 58px; height: 58px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(157,192,245,0.18));
+      border: 1.5px solid rgba(157,192,245,0.35);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(157,192,245,0.18), inset 0 1px 0 rgba(255,255,255,0.5);
+      animation: iconPulse 3s ease-in-out infinite;
+    }
+    @keyframes iconPulse {
+      0%,100% { box-shadow: 0 0 20px rgba(157,192,245,0.16), inset 0 1px 0 rgba(255,255,255,0.5); }
+      50%     { box-shadow: 0 0 40px rgba(157,192,245,0.25),  inset 0 1px 0 rgba(255,255,255,0.65); }
+    }
+    .logo-icon svg {
+      width: 27px; height: 27px;
+      color: var(--accent);
+      filter: drop-shadow(0 0 8px rgba(31,47,83,0.16));
+    }
+
+    .logo-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      line-height: 1.45;
+    }
+    .logo-title span { color: var(--accent); }
+
+    .logo-sub {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════════════
+       FORM FIELDS
+    ══════════════════════════════════════ */
+    .field-group {
+      margin-bottom: 18px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .field-group:nth-child(1) { animation-delay: 0.3s; }
+    .field-group:nth-child(2) { animation-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text2);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+    }
+    .field-label svg {
+      width: 14px; height: 14px;
+      color: var(--accent);
+      opacity: 0.8;
+    }
+
+    .field-wrap {
+      position: relative;
+    }
+
+    .field-input {
+      width: 100%;
+	      background: rgba(7,22,38,0.84);
+      border: 1.5px solid var(--border-lit);
+      border-radius: 10px;
+      padding: 13px 46px 13px 48px;
+      color: #ffffff;
+      font-family: var(--main);
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.25s;
+      outline: none;
+      min-height: 50px;
+      text-align: right;
+    }
+
+    .field-input::placeholder {
+      color: var(--text3);
+      font-weight: 400;
+    }
+
+    .field-input:focus {
+      border-color: var(--accent);
+	      background: rgba(7,22,38,0.96);
+      box-shadow:
+        0 0 0 3px rgba(157,192,245,0.18),
+        0 0 20px rgba(157,192,245,0.12);
+    }
+
+    .field-input.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(224,82,82,0.12);
+    }
+
+    .field-input.valid {
+      border-color: var(--success);
+    }
+
+    /* Icon inside field */
+    .field-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px; height: 20px;
+      color: var(--text3);
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+    .field-wrap:focus-within .field-icon {
+      color: var(--accent);
+    }
+
+    /* Password toggle button */
+    .pw-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text3);
+      padding: 4px;
+      width: 28px;
+      height: 28px;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pw-toggle:hover { color: var(--accent); }
+    .pw-toggle svg { width: 18px; height: 18px; }
+
+    /* Field error message */
+    .field-error {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--danger);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: all 0.2s;
+    }
+    .field-error.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ══════════════════════════════════════
+       REMEMBER + FORGOT
+    ══════════════════════════════════════ */
+    .form-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      animation: fadeUp 0.5s ease 0.5s both;
+    }
+
+    .remember-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text2);
+      user-select: none;
+    }
+
+    .custom-check {
+      width: 18px; height: 18px;
+      border: 1.5px solid var(--border-lit);
+      border-radius: 5px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .custom-check.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(96,165,250,0.4);
+    }
+    .custom-check svg {
+      width: 11px; height: 11px;
+	      color: #082032;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.15s;
+    }
+    .custom-check.checked svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .forgot-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: all 0.2s;
+      font-family: var(--mono);
+    }
+    .forgot-link:hover {
+      color: #fff;
+      text-shadow: 0 0 12px rgba(157,192,245,0.35);
+    }
+
+    /* ══════════════════════════════════════
+       SUBMIT BUTTON
+    ══════════════════════════════════════ */
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #f7f3ee;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--main);
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+      letter-spacing: 0.02em;
+      animation: fadeUp 0.5s ease 0.55s both;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 24px rgba(31,47,83,0.18);
+    }
+
+    /* Shimmer sweep */
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255,255,255,0.25),
+        transparent
+      );
+      transition: left 0.5s;
+    }
+    .btn-login:hover::before { left: 150%; }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(31,47,83,0.22);
+    }
+    .btn-login:active { transform: translateY(0); }
+
+    .btn-login.loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .btn-login svg { width: 20px; height: 20px; }
+
+    /* Spinner */
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid rgba(31,47,83,0.18);
+      border-top-color: #f7f3ee;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-text { transition: opacity 0.2s; }
+
+    /* ══════════════════════════════════════
+       DIVIDER
+    ══════════════════════════════════════ */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 20px;
+      animation: fadeUp 0.5s ease 0.6s both;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-lit), transparent);
+    }
+    .divider span {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════════
+       FOOTER INFO
+    ══════════════════════════════════════ */
+    .login-footer {
+      text-align: center;
+      animation: fadeUp 0.5s ease 0.65s both;
+    }
+    .login-footer p {
+      font-size: 12px;
+      color: var(--text3);
+      font-family: var(--mono);
+      letter-spacing: 0.04em;
+    }
+    .login-footer strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════════
+       STRENGTH INDICATOR
+    ══════════════════════════════════════ */
+    .strength-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+      height: 3px;
+    }
+    .strength-seg {
+      flex: 1;
+      border-radius: 2px;
+      background: var(--border-lit);
+      transition: background 0.3s;
+    }
+    .strength-seg.weak   { background: var(--danger); }
+    .strength-seg.medium { background: #f0a020; }
+    .strength-seg.strong { background: var(--success); }
+
+    .strength-text {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 5px;
+      height: 14px;
+      transition: all 0.2s;
+      font-family: var(--mono);
+    }
+    .strength-text.weak   { color: var(--danger); }
+    .strength-text.medium { color: #f0a020; }
+    .strength-text.strong { color: var(--success); }
+
+    /* ══════════════════════════════════════
+       SUCCESS OVERLAY
+    ══════════════════════════════════════ */
+    .success-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--card);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+      z-index: 10;
+    }
+    .success-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(127,217,167,0.2);
+      border: 2px solid var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: successPop 0.5s cubic-bezier(0.34,1.7,0.64,1) both;
+      box-shadow: 0 0 30px rgba(127,217,167,0.18);
+    }
+    @keyframes successPop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .success-icon svg { width: 36px; height: 36px; color: var(--success); }
+    .success-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+    }
+    .success-sub {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    /* ══════════════════════════════════════
+       SECURITY BADGE
+    ══════════════════════════════════════ */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      animation: fadeUp 0.5s ease 0.7s both;
+    }
+    .security-badge svg {
+      width: 13px; height: 13px;
+      color: var(--text3);
+    }
+    .security-badge span {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .page {
+        align-items: flex-start;
+        padding: 20px 14px;
+      }
+
+      .login-card {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 14px 12px 24px;
+      }
+
+      .login-card {
+        padding: 24px 18px 22px;
+        border-radius: 16px;
+      }
+
+      .login-card::after {
+        width: 42px;
+        height: 42px;
+      }
+
+      .login-logo {
+        margin-bottom: 18px;
+      }
+
+      .logo-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 12px;
+      }
+
+      .logo-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .logo-title {
+        font-size: 18px;
+      }
+
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 0.04em;
+      }
+
+      .field-label {
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      .field-input {
+        min-height: 46px;
+        font-size: 14px;
+        padding: 12px 42px 12px 44px;
+      }
+
+      .field-icon {
+        left: 12px;
+        width: 18px;
+        height: 18px;
+      }
+
+      .pw-toggle {
+        right: 10px;
+      }
+
+      .form-meta {
+        margin-bottom: 18px;
+      }
+
+      .remember-label,
+      .forgot-link {
+        font-size: 11px;
+      }
+
+      .security-badge {
+        margin-top: 16px;
+        padding: 0 4px;
+      }
+
+      .security-badge span {
+        font-size: 9px;
+        letter-spacing: 0.03em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- خلفية متحركة -->
+<div class="bg-scene">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="scan-line"></div>
+</div>
+
+<!-- الصفحة الرئيسية -->
+<div class="page">
+  <div class="login-card" id="loginCard">
+
+    <!-- شعار النظام -->
+    <div class="login-logo">
+      <div class="logo-icon">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+      </div>
+      <div class="logo-title"> الحبيب <br><span> للتجاره والتوزيع</span></div>
+      <div class="logo-sub">نظام نقطة البيع · v2.0</div>
+    </div>
+
+    <!-- نموذج تسجيل الدخول -->
+    <form id="loginForm" novalidate>
+
+      <!-- حقل الإيميل -->
+      <div class="field-group">
+        <div class="field-label">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          البريد الإلكتروني
+        </div>
+        <div class="field-wrap">
+          <input
+            type="email"
+            class="field-input"
+            id="emailInput"
+            placeholder="example@mail.com"
+            autocomplete="email"
+            dir="ltr"
+          >
+          <svg class="field-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div class="field-error" id="emailError">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;flex-shrink:0">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <span id="emailErrorText"></span>
+        </div>
+      </div>
+
+      <!-- حقل كلمة المرور -->
+      <div class="field-group">
+        <div class="field-label">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          كلمة المرور
+        </div>
+        <div class="field-wrap">
+          <input
+            type="password"
+            class="field-input"
+            id="passwordInput"
+            placeholder="••••••••••"
+            autocomplete="current-password"
+            dir="ltr"
+          >
+          <svg class="field-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          <!-- زر إظهار/إخفاء كلمة المرور -->
+          <button type="button" class="pw-toggle" id="pwToggle" title="إظهار / إخفاء">
+            <svg id="eyeShow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+            <svg id="eyeHide" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" style="display:none">
+              <path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- مؤشر قوة كلمة المرور -->
+        <div class="strength-bar" id="strengthBar">
+          <div class="strength-seg" id="seg1"></div>
+          <div class="strength-seg" id="seg2"></div>
+          <div class="strength-seg" id="seg3"></div>
+          <div class="strength-seg" id="seg4"></div>
+        </div>
+        <div class="strength-text" id="strengthText"></div>
+
+        <div class="field-error" id="passwordError">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;flex-shrink:0">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <span id="passwordErrorText"></span>
+        </div>
+      </div>
+
+      <!-- تذكرني + نسيت كلمة المرور -->
+      <div class="form-meta">
+        <label class="remember-label" onclick="toggleRemember()">
+          <div class="custom-check" id="rememberCheck">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          تذكرني
+        </label>
+        <a href="#" class="forgot-link" onclick="handleForgot(event)">نسيت كلمة المرور؟</a>
+      </div>
+
+      <!-- زر تسجيل الدخول -->
+      <button type="submit" class="btn-login" id="loginBtn">
+        <div class="spinner" id="spinner"></div>
+        <span class="btn-text" id="btnText">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-left:6px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+          </svg>
+          دخول
+        </span>
+      </button>
+
+    </form>
+
+    <!-- شارة الأمان -->
+    <div class="security-badge">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+      </svg>
+      <span>اتصال آمن · SSL مشفر · 256-bit</span>
+    </div>
+
+    <!-- طبقة النجاح -->
+    <div class="success-overlay" id="successOverlay">
+      <div class="success-icon">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <div class="success-title">مرحباً بك! 👋</div>
+      <div class="success-sub">جاري تحميل لوحة التحكم...</div>
+    </div>
+
+  </div><!-- /.login-card -->
+</div><!-- /.page -->
+
+<script type="application/disabled+javascript" id="legacy-login-script-disabled">
+  // ── بيانات المستخدمين — كلمات المرور مشفرة بـ SHA-256 ──
+  // تعريفات المستخدمين المحليين لواجهة الدخول القديمة
+  const USERS = [
+    {
+      email: 'admin@pos.eg',
+      passwordHash: 'bc78e58d55cde1346e68f8e5fe588dedf62fa457aa646a500a53347faff6ee24',
+      name: 'المدير',
+      role: 'admin',
+    },
+    {
+      email: 'cashier@pos.eg',
+      passwordHash: 'bc78e58d55cde1346e68f8e5fe588dedf62fa457aa646a500a53347faff6ee24',
+      name: 'الكاشير',
+      role: 'cashier',
+    },
+    {
+      email: 'store@pos.eg',
+      passwordHash: 'bc78e58d55cde1346e68f8e5fe588dedf62fa457aa646a500a53347faff6ee24',
+      name: 'المخزن',
+      role: 'store',
+    },
+  ];
+
+  // ── SHA-256 Hash (Web Crypto API) ──
+  async function sha256(message) {
+    const msgBuffer  = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray  = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  let rememberMe = false;
+
+  // ── تعبئة سريعة للحساب دون كشف كلمة المرور ──
+  function fillDemo() {
+    const emailEl = document.getElementById('emailInput');
+    const passEl  = document.getElementById('passwordInput');
+    emailEl.value = 'admin@pos.eg';
+    passEl.value  = '';
+    emailEl.dispatchEvent(new Event('input'));
+    passEl.dispatchEvent(new Event('input'));
+    clearErrors();
+  }
+
+  // ── تبديل التذكر ──
+  function toggleRemember() {
+    rememberMe = !rememberMe;
+    const check = document.getElementById('rememberCheck');
+    check.classList.toggle('checked', rememberMe);
+  }
+
+  // ── نسيت كلمة المرور ──
+  function handleForgot(e) {
+    e.preventDefault();
+    showToast('📧 تم إرسال رابط استعادة كلمة المرور إلى بريدك', 'info');
+  }
+
+  // ── إظهار / إخفاء كلمة المرور ──
+  document.getElementById('pwToggle').addEventListener('click', () => {
+    const input   = document.getElementById('passwordInput');
+    const eyeShow = document.getElementById('eyeShow');
+    const eyeHide = document.getElementById('eyeHide');
+    const isPass  = input.type === 'password';
+    input.type    = isPass ? 'text' : 'password';
+    eyeShow.style.display = isPass ? 'none'  : '';
+    eyeHide.style.display = isPass ? ''      : 'none';
+  });
+
+  // ── مؤشر قوة كلمة المرور ──
+  document.getElementById('passwordInput').addEventListener('input', function() {
+    const val = this.value;
+    const score = calcStrength(val);
+    updateStrengthUI(score, val.length);
+  });
+
+  function calcStrength(pw) {
+    if (!pw) return 0;
+    let score = 0;
+    if (pw.length >= 8)  score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    return Math.min(score, 4);
+  }
+
+  function updateStrengthUI(score, len) {
+    if (len === 0) {
+      ['seg1','seg2','seg3','seg4'].forEach(id => {
+        document.getElementById(id).className = 'strength-seg';
+      });
+      document.getElementById('strengthText').textContent = '';
+      document.getElementById('strengthText').className   = 'strength-text';
+      return;
+    }
+
+    const segs      = ['seg1','seg2','seg3','seg4'];
+    const classMap  = { 1:'weak', 2:'weak', 3:'medium', 4:'strong' };
+    const labelMap  = { 1:'ضعيفة جداً', 2:'ضعيفة', 3:'متوسطة', 4:'قوية ✓' };
+    const cls       = classMap[score] || 'weak';
+
+    segs.forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.className = 'strength-seg' + (i < score ? ' ' + cls : '');
+    });
+
+    const txt = document.getElementById('strengthText');
+    txt.textContent = labelMap[score] || '';
+    txt.className   = 'strength-text ' + cls;
+  }
+
+  // ── التحقق من الإيميل ──
+  function validateEmail(email) {
+    if (!email) return 'البريد الإلكتروني مطلوب';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'صيغة البريد الإلكتروني غير صحيحة';
+    return null;
+  }
+
+  // ── التحقق من كلمة المرور ──
+  function validatePassword(pw) {
+    if (!pw) return 'كلمة المرور مطلوبة';
+    if (pw.length < 6) return 'كلمة المرور قصيرة جداً (6 أحرف على الأقل)';
+    return null;
+  }
+
+  // ── عرض خطأ ──
+  function showError(fieldId, errorId, message) {
+    document.getElementById(fieldId).classList.add('error');
+    document.getElementById(fieldId).classList.remove('valid');
+    document.getElementById(errorId + 'Text').textContent = message;
+    document.getElementById(errorId).classList.add('show');
+  }
+
+  // ── مسح الأخطاء ──
+  function clearErrors() {
+    ['email','password'].forEach(f => {
+      document.getElementById(f + 'Input').classList.remove('error','valid');
+      document.getElementById(f + 'Error').classList.remove('show');
+    });
+  }
+
+  // ── تحقق مباشر عند الكتابة ──
+  document.getElementById('emailInput').addEventListener('blur', function() {
+    const err = validateEmail(this.value.trim());
+    if (err) {
+      showError('emailInput', 'emailError', err);
+    } else {
+      this.classList.remove('error');
+      this.classList.add('valid');
+      document.getElementById('emailError').classList.remove('show');
+    }
+  });
+
+  document.getElementById('passwordInput').addEventListener('blur', function() {
+    const err = validatePassword(this.value);
+    if (err) {
+      showError('passwordInput', 'passwordError', err);
+    } else {
+      this.classList.remove('error');
+      this.classList.add('valid');
+      document.getElementById('passwordError').classList.remove('show');
+    }
+  });
+
+  // ── إرسال النموذج ──
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    clearErrors();
+
+    const email    = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+
+    // تحقق من الحقول
+    const emailErr = validateEmail(email);
+    const passErr  = validatePassword(password);
+
+    if (emailErr) { showError('emailInput', 'emailError', emailErr); return; }
+    if (passErr)  { showError('passwordInput', 'passwordError', passErr); return; }
+
+    // تحميل...
+    setLoading(true);
+    await delay(1400);
+
+    // التحقق من البيانات (كلمة المرور مشفرة SHA-256)
+    const inputHash = await sha256(password);
+    const user = USERS.find(u =>
+      u.email.toLowerCase() === email.toLowerCase() && u.passwordHash === inputHash
+    );
+
+    if (!user) {
+      setLoading(false);
+      showError('passwordInput', 'passwordError', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+      shakeCard();
+      return;
+    }
+
+    // نجح تسجيل الدخول
+    setLoading(false);
+    // حفظ الجلسة مع وقت انتهاء الصلاحية (8 ساعات)
+    const SESSION_HOURS = 8;
+    const expiresAt = Date.now() + SESSION_HOURS * 60 * 60 * 1000;
+    localStorage.setItem('nadir_pos_session', JSON.stringify({ email: user.email, name: user.name, role: user.role || 'admin', expiresAt }));
+    if (rememberMe) {
+      localStorage.setItem('nadir_pos_remember', JSON.stringify({ email: user.email, name: user.name, role: user.role || 'admin' }));
+    }
+    showSuccess();
+  });
+
+  function setLoading(on) {
+    const btn      = document.getElementById('loginBtn');
+    const spinner  = document.getElementById('spinner');
+    const btnText  = document.getElementById('btnText');
+    btn.classList.toggle('loading', on);
+    spinner.style.display  = on ? 'block' : 'none';
+    btnText.style.display  = on ? 'none'  : 'flex';
+  }
+
+  function showSuccess() {
+    document.getElementById('successOverlay').classList.add('show');
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1800);
+  }
+
+  function shakeCard() {
+    const card = document.getElementById('loginCard');
+    card.style.animation = 'none';
+    card.style.transform = 'translateX(0)';
+    requestAnimationFrame(() => {
+      card.style.transition = 'transform 0.08s ease';
+      const steps = [10, -10, 8, -8, 5, -5, 0];
+      let i = 0;
+      const step = () => {
+        if (i >= steps.length) { card.style.transform = ''; return; }
+        card.style.transform = `translateX(${steps[i]}px)`;
+        i++;
+        setTimeout(step, 60);
+      };
+      step();
+    });
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ── Toast بسيط ──
+  function showToast(msg, type = 'info') {
+      const colors = { info: '#9DC0F5', success: '#7FD9A7', error: '#e05252' };
+    const toast  = document.createElement('div');
+    toast.style.cssText = `
+      position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-80px);
+      background:#13172060; backdrop-filter:blur(16px);
+      border:1px solid ${colors[type]}40; border-right:3px solid ${colors[type]};
+      border-radius:8px; padding:12px 20px;
+      color:#fff; font-family:'Cairo',sans-serif; font-size:14px; font-weight:700;
+      z-index:9999; white-space:nowrap;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      direction:rtl;
+    `;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+      });
+    });
+    setTimeout(() => {
+      toast.style.transform = 'translateX(-50%) translateY(-80px)';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  // ── تحقق من "تذكرني" عند الفتح ──
+  window.addEventListener('DOMContentLoaded', () => {
+    const remembered = localStorage.getItem('nadir_pos_remember');
+    if (remembered) {
+      try {
+        const u = JSON.parse(remembered);
+        document.getElementById('emailInput').value = u.email || '';
+        rememberMe = true;
+        document.getElementById('rememberCheck').classList.add('checked');
+      } catch(e) {}
+    }
+  });
+</script>
+<script src="js/users-store.js"></script>
+<script src="js/login-app.js"></script>
+<script>
+  if (location.protocol !== 'file:' && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      let refreshing = false;
+      const updateServiceWorker = reg => {
+        if (reg?.waiting) {
+          reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      };
+
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+
+      navigator.serviceWorker.register('./sw.js', {scope: './'})
+        .then(reg => {
+          if (reg.waiting) updateServiceWorker(reg);
+          reg.addEventListener('updatefound', () => {
+            const worker = reg.installing;
+            if (!worker) return;
+            worker.addEventListener('statechange', () => {
+              if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                updateServiceWorker(reg);
+              }
+            });
+          });
+        })
+        .catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

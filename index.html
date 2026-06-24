@@ -1,0 +1,1095 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="الحبيب للتجارة والتوزيع">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0D1117">
+  <script>
+    if (location.protocol !== 'file:') {
+      const manifestLink = document.createElement('link');
+      manifestLink.rel = 'manifest';
+      manifestLink.href = 'manifest.json';
+      document.head.appendChild(manifestLink);
+    }
+  </script>
+  <link rel="icon" type="image/png" href="icons/mm-logo.png">
+  <link rel="shortcut icon" href="icons/mm-logo.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/mm-logo.png">
+  <title>الحبيب للتجارة والتوزيع</title>
+  <link rel="preconnect" href="https://ucqqejxlhgeslenowzuk.supabase.co" crossorigin>
+  <link rel="dns-prefetch" href="https://ucqqejxlhgeslenowzuk.supabase.co">
+  <link rel="preload" href="css/style.css" as="style">
+  
+  <link rel="preload" href="js/app.js" as="script">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css" media="print">
+  <style>
+    #app-loading { position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,#0D1117 0%,#11161d 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px; }
+    .loading-badge { width:84px;height:84px;border-radius:24px;background:#161B22;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(48,54,61,0.9);overflow:hidden;padding:6px; }
+    .loading-badge img { width:100%;height:100%;object-fit:contain;border-radius:18px;display:block; }
+    .loading-logo { font-family:'Tajawal',sans-serif;font-size:22px;font-weight:900;color:#E6EDF3;text-align:center;line-height:1.4; }
+    .loading-logo span { color:#22C55E; }
+    .loading-spinner { width:40px;height:40px;border:3px solid rgba(34,197,94,0.18);border-top-color:#22C55E;border-radius:50%;animation:spin 0.8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    :root { --mobile-header-offset: 68px; }
+    .app-header { position:fixed;top:0;left:0;right:0;height:52px;background:rgba(13,17,23,0.94);border-bottom:1px solid rgba(48,54,61,0.9);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:50;backdrop-filter:blur(14px); }
+    .brand-wrap { display:flex;align-items:center;gap:12px; }
+    .brand-mark { width:42px;height:42px;border-radius:14px;background:#161B22;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(0,0,0,0.24);flex-shrink:0;overflow:hidden;padding:3px;border:1px solid #30363d; }
+    .brand-mark img { width:100%;height:100%;object-fit:contain;border-radius:11px;display:block; }
+    .app-header-title { font-family:var(--font-main);font-size:14px;font-weight:900;color:var(--text-primary);line-height:1.2; }
+    .app-header-title span { color:var(--accent); }
+    .app-header-sub { font-size:10px;color:var(--text-muted);font-family:var(--font-mono); }
+    .header-actions { display:flex;gap:8px;align-items:center; }
+    .page { padding-top:calc(var(--mobile-header-offset) + env(safe-area-inset-top, 0px)) !important; }
+    /* Period buttons */
+    .period-btns { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px; }
+    .period-btns .btn { font-size:12px;padding:5px 10px;min-height:30px; }
+    .period-btns .btn.active { background:var(--accent);color:#0D1117;border-color:var(--accent); }
+    /* Report stats */
+    .rep-stats { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px; }
+    .rep-stat { background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px; }
+    .rep-stat-label { font-size:11px;color:var(--text-muted);margin-bottom:4px; }
+    .rep-stat-val { font-size:16px;font-weight:700;font-family:var(--font-mono);color:var(--accent); }
+    /* Invoice filter bar */
+    .filter-bar { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px; }
+    .filter-bar select, .filter-bar input[type=date] { flex:1;min-width:100px;font-size:11px;padding:5px 8px;height:32px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-family:var(--font-main); }
+
+    /* â”€â”€â”€ Cart Drawer â”€â”€â”€ */
+    #cart-fab {
+      position:relative;width:36px;height:36px;border-radius:50%;
+      background:var(--bg-card);border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:border-color .2s,background .2s;flex-shrink:0;
+    }
+    #cart-fab:hover { border-color:var(--accent);background:rgba(103,183,247,0.10); }
+    #cart-fab svg { width:18px;height:18px;color:var(--text-secondary); }
+    #cart-fab.has-items svg { color:var(--accent); }
+    #cart-fab-badge {
+      display:none;position:absolute;top:-4px;left:-4px;
+      background:#e05252;color:#fff;font-size:9px;font-weight:700;
+      font-family:var(--font-mono);min-width:16px;height:16px;
+      border-radius:8px;align-items:center;justify-content:center;
+      padding:0 3px;border:2px solid var(--bg-secondary);
+    }
+    #cart-drawer-overlay {
+      display:none;position:fixed;inset:0;z-index:200;
+      background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);
+    }
+    #cart-drawer-overlay.open { display:block; }
+    #cart-drawer {
+      position:fixed;bottom:0;left:0;right:0;z-index:201;
+      background:var(--bg-secondary);border-radius:20px 20px 0 0;
+      border-top:1px solid var(--border-accent);
+      max-height:82vh;display:flex;flex-direction:column;
+      transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    }
+    #cart-drawer.open { transform:translateY(0); }
+    #cart-drawer-handle { width:36px;height:4px;border-radius:2px;background:var(--border);margin:10px auto 0;flex-shrink:0; }
+    #cart-drawer-head { padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between; }
+    #cart-drawer-title { font-size:15px;font-weight:700;color:var(--text-primary); }
+    #cart-drawer-client { font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-top:2px; }
+    #cart-drawer-close { width:28px;height:28px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer; }
+    #cart-drawer-close svg { width:14px;height:14px;color:var(--text-muted); }
+    #cart-drawer-body { overflow-y:auto;flex:1;padding:0 16px; }
+    .cart-drawer-item { display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border); }
+    .cart-drawer-item-name { flex:1;font-size:13px;font-weight:600;color:var(--text-primary);line-height:1.3; }
+    .cart-drawer-item-meta { font-size:10px;color:var(--text-muted);margin-top:2px;font-family:var(--font-mono); }
+    .cart-drawer-item-total { font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0; }
+    .cart-drawer-qty-badge { min-width:24px;height:24px;border-radius:6px;background:rgba(103,183,247,0.14);border:1px solid rgba(103,183,247,0.28);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--accent);flex-shrink:0;padding:0 4px; }
+    #cart-drawer-footer { padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0; }
+    #cart-drawer-total-row { display:flex;justify-content:space-between;align-items:center;margin-bottom:10px; }
+    #cart-drawer-total-label { font-size:13px;color:var(--text-secondary); }
+    #cart-drawer-total-val { font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--accent); }
+    #cart-drawer-goto { width:100%;padding:11px;border-radius:10px;background:var(--accent);color:#082032;font-family:var(--font-main);font-size:14px;font-weight:700;border:none;cursor:pointer; }
+    #cart-drawer-empty { text-align:center;padding:36px 16px;color:var(--text-muted);font-size:13px; }
+    #cart-drawer-empty svg { width:40px;height:40px;margin:0 auto 10px;display:block;opacity:.3; }
+    #cart-drawer-clients { display:flex;gap:6px;overflow-x:auto;padding:8px 16px 0;flex-shrink:0;scrollbar-width:none; }
+    #cart-drawer-clients::-webkit-scrollbar { display:none; }
+    .cart-client-tab { flex-shrink:0;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);transition:all .15s;white-space:nowrap; }
+    .cart-client-tab.active { background:rgba(103,183,247,0.15);border-color:var(--accent);color:var(--accent); }
+    @media (max-width:768px){
+      :root { --mobile-header-offset: 122px; }
+      .app-header {
+        height:auto;
+        min-height:unset;
+        padding:10px 12px;
+        gap:8px;
+        display:grid;
+        grid-template-columns:auto minmax(0, 1fr);
+        align-items:center;
+      }
+      .brand-wrap {
+        min-width:0;
+        gap:10px;
+      }
+      .header-meta {
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+        justify-content:flex-start;
+      }
+      .header-actions {
+        grid-column:1 / -1;
+        width:100%;
+        justify-content:flex-start;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        padding-bottom:2px;
+        scrollbar-width:none;
+      }
+      .header-actions::-webkit-scrollbar { display:none; }
+      .header-actions > * { flex:0 0 auto; }
+      .app-header-title { font-size:15px; }
+      .app-header-sub { font-size:11px; }
+    }
+    @media (max-width:480px){
+      :root { --mobile-header-offset: 112px; }
+      .app-header {
+        padding:8px 10px;
+        gap:6px;
+      }
+      .brand-mark {
+        width:36px;
+        height:36px;
+        border-radius:12px;
+      }
+      .app-header-title { font-size:13px; }
+      .app-header-sub { display:none; }
+      .header-actions .btn,
+      #cart-fab,
+      #logout-btn {
+        min-height:30px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app-loading">
+  <div class="loading-badge" aria-hidden="true">
+    <img src="icons/mm-logo.png" alt="MM Logo">
+  </div>
+  <div class="loading-logo"><span id="loading-brand-name">الحبيب/span><br><span id="loading-brand-sub">للتجارة والتوزيع</span></div>
+  <script>
+    document.title = 'الحبيب للتجارة والتوزيع';
+    document.getElementById('loading-brand-name').textContent = 'الحبيب';
+    document.getElementById('loading-brand-sub').textContent = 'نظام موحد لإدارة المبيعات والتوزيع';
+  </script>
+  <div class="loading-spinner"></div>
+  <div id="loading-msg" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8896b0;">جاري الاتصال بقاعدة البيانات...</div>
+</div>
+
+<div id="app">
+
+  <!-- شريط الرأس -->
+  <header class="app-header">
+    <div class="brand-wrap">
+      <div class="brand-mark" aria-hidden="true">
+        <img src="icons/mm-logo.png" alt="MM Logo">
+      </div>
+      <div>
+        <div class="app-header-title" id="app-brand-title">الحبيب <span>للتجارة والتوزيع</span></div>
+        <div class="app-header-sub" id="dash-datetime"></div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="role-badge" id="user-role-badge">المستخدم</span>
+      <span class="sync-badge online" id="sync-status-badge">أونلاين</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary btn-sm" id="smart-search-btn" style="padding:6px 10px;min-height:32px;">بحث</button>
+      <button class="btn btn-secondary btn-sm" id="backup-open-btn" data-roles="admin" style="padding:6px 10px;min-height:32px;">نسخ</button>
+      <button class="btn btn-secondary btn-sm" id="settings-open-btn" data-roles="admin" style="padding:6px 10px;min-height:32px;">إعدادات</button>
+      <!-- زر السلة -->
+      <button id="cart-fab" onclick="CartDrawer.open()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span id="cart-fab-badge"></span>
+      </button>
+      <button class="btn btn-secondary btn-sm" id="install-app-btn" style="padding:6px 10px;min-height:32px;display:none;">تثبيت</button>
+      <button class="btn btn-danger btn-sm" id="logout-btn" style="padding:6px 10px;min-height:32px;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- لوحة التحكم -->
+  <div id="page-dashboard" class="page">
+    <div class="page-header"><h1><span>//</span> 📊 لوحة التحكم</h1></div>
+    <div id="dash-low-stock"></div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">المبيعات المحصّلة</div>
+        <div class="stat-value large" id="dash-total-sales">٠.٠٠ ج</div>
+        <svg class="stat-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">الفواتير</div>
+        <div class="stat-value" id="dash-total-invoices">0</div>
+        <svg class="stat-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">المنتجات</div>
+        <div class="stat-value" id="dash-total-products">0</div>
+        <svg class="stat-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">العملاء</div>
+        <div class="stat-value" id="dash-total-shops">0</div>
+        <svg class="stat-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      </div>
+      <div class="stat-card" id="dash-rep-target-card" style="display:none;">
+        <div class="stat-label" id="dash-rep-target-label">التارجت الشهري</div>
+        <div class="stat-value" id="dash-rep-target">٠.٠٠ ج</div>
+        <div style="margin-top:8px;">
+          <div style="height:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;">
+            <div id="dash-rep-target-bar" style="height:100%;width:0;background:linear-gradient(90deg,#34d399,#60a5fa);"></div>
+          </div>
+          <div id="dash-rep-target-progress" style="font-size:11px;color:var(--text-muted);margin-top:6px;">المنجز: ٠.٠٠ ج</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- صف ثاني: اليوم + المتبقي + الديون -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div class="stat-card" style="grid-column:1/-1;">
+        <div class="stat-label">💰 محصّل اليوم</div>
+        <div class="stat-value" id="dash-today-collected" style="font-size:22px;color:#4ade80;">٠.٠٠ ج</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">⏳ متبقي (معلق)</div>
+        <div class="stat-value" id="dash-total-remaining" style="font-size:16px;color:#f0c040;">٠.٠٠ ج</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">📋 فواتير معلقة</div>
+        <div class="stat-value" id="dash-pending-count" style="font-size:16px;color:#f0c040;">0</div>
+      </div>
+    </div>
+
+    <!-- ديون العملاء المعلقة -->
+    <div id="dash-pending-clients" style="margin-bottom:12px;"></div>
+    <div class="chart-container">
+      <h3>المبيعات الشهرية — آخر 6 أشهر</h3>
+      <div style="height:180px;"><canvas id="sales-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-title">أحدث الفواتير</div>
+      <div id="dash-recent-invoices"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+      <button class="btn btn-primary btn-lg" onclick="Router.navigate('new-invoice')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        فاتورة جديدة
+      </button>
+      <button class="btn btn-secondary btn-lg" onclick="Router.navigate('reports')" data-roles="admin">
+        📊 التقارير
+      </button>
+      <button class="btn btn-secondary btn-lg" onclick="Router.navigate('expenses')" data-roles="admin" style="grid-column:1/-1;">
+        💸 المصاريف
+      </button>
+      <button class="btn btn-secondary btn-lg" id="dashboard-settings-btn" data-roles="admin" style="grid-column:1/-1;">
+        ⚙ الإعدادات
+      </button>
+    </div>
+  </div>
+
+  <!-- المنتجات -->
+  <div id="page-products" class="page" data-roles="admin,store">
+    <div class="page-header">
+      <h1><span>//</span> 📦 المنتجات <span id="products-count" class="badge badge-yellow" style="font-size:12px;vertical-align:middle;"></span></h1>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm" id="batch-barcodes-btn" data-roles="admin,store">🏷 باركودات</button>
+        <button class="btn btn-secondary btn-sm" id="stock-log-btn" data-roles="admin,store">📋 حركة</button>
+        <button class="btn btn-primary btn-sm" id="add-product-btn" data-roles="admin,store">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+          إضافة
+        </button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="products-search" placeholder="بحث بالاسم، الباركود، التصنيف...">
+    </div>
+    <!-- [1,2,3] إحصائيات المنتجات -->
+    <div id="products-stats"></div>
+    <div id="products-list"></div>
+  </div>
+
+  <!-- العملاء -->
+  <div id="page-shops" class="page" data-roles="admin,cashier,store">
+    <div class="page-header">
+      <h1><span>//</span> 👤 العملاء <span id="shops-count" class="badge badge-yellow" style="font-size:12px;vertical-align:middle;"></span></h1>
+    <button class="btn btn-primary btn-sm" id="add-shop-btn" data-roles="admin,cashier">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        إضافة
+      </button>
+    </div>
+    <div class="search-bar">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="shops-search" placeholder="بحث بالاسم، المسؤول، الهاتف...">
+    </div>
+    <div id="shops-list"></div>
+  </div>
+
+  <!-- الفواتير -->
+  <div id="page-invoices" class="page" data-roles="admin,cashier">
+    <div class="page-header">
+      <h1><span>//</span> 🧾 الفواتير <span id="invoices-count" class="badge badge-yellow" style="font-size:12px;vertical-align:middle;"></span></h1>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm" onclick="Router.navigate('wa-invoices')" data-roles="admin,cashier">
+          واتساب
+        </button>
+        <button class="btn btn-primary btn-sm" id="new-invoice-from-list" data-roles="admin,cashier">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+          جديد
+        </button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="invoices-search" placeholder="بحث برقم الفاتورة أو اسم العميل...">
+    </div>
+    <div class="filter-bar">
+      <select id="inv-filter-status">
+        <option value="">كل الحالات</option>
+        <option value="paid">مدفوعة</option>
+        <option value="pending">معلقة</option>
+        <option value="void">ملغاة</option>
+        <option value="return">مرتجع</option>
+      </select>
+      <input type="date" id="inv-filter-from" title="من تاريخ">
+      <input type="date" id="inv-filter-to" title="إلى تاريخ">
+    </div>
+    <div id="invoices-list"></div>
+  </div>
+
+  <div id="page-wa-invoices" class="page" data-roles="admin,cashier">
+    <div class="page-header">
+      <h1><span>//</span> الشات الداخلي</h1>
+      <button class="btn btn-secondary btn-sm" id="wa-refresh-btn">تحديث</button>
+    </div>
+
+    <div class="wa-chat-shell">
+      <div class="wa-chat-main">
+        <div class="wa-chat-hero">
+          <div class="wa-chat-hero-head">
+            <div>
+              <div class="section-title">محادثة الجروب</div>
+              <input type="text" class="form-control wa-chat-title" id="wa-title-input" value="جروب الإدارة" readonly>
+            </div>
+            <div id="wa-summary" class="wa-chat-summary"></div>
+          </div>
+        </div>
+
+        <div class="wa-thread-card">
+          <div id="wa-preview-area" class="wa-preview-empty">لا توجد رسائل بعد داخل الجروب.</div>
+        </div>
+
+        <div class="wa-composer-card">
+          <div class="form-group mb-0">
+            <label class="form-label">الرسالة</label>
+            <textarea class="form-control wa-composer-input" id="wa-text-input" placeholder="اكتب رسالتك هنا..."></textarea>
+          </div>
+          <div class="wa-composer-actions">
+            <button class="btn btn-primary btn-lg" id="wa-save-btn">إرسال الرسالة</button>
+            <button class="btn btn-secondary btn-lg" id="wa-clear-form-btn">مسح الحقل</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wa-chat-side">
+        <div class="card wa-side-card">
+          <div class="section-title">المشاركون</div>
+          <div class="search-bar wa-search-bar">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="wa-search-input" placeholder="بحث باسم المرسل أو نص الرسالة...">
+          </div>
+          <div id="wa-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- فاتورة جديدة -->
+  <div id="page-new-invoice" class="page" data-roles="admin,cashier">
+    <div class="page-header">
+      <h1><span>//</span> 🧾 فاتورة جديدة</h1>
+      <button class="btn btn-secondary btn-sm" id="reset-invoice-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        مسح الكل
+      </button>
+    </div>
+    <!-- [إصلاح 4] بانر وضع التعديل -->
+    <div id="edit-invoice-banner" style="display:none;align-items:center;gap:10px;background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.4);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--accent);flex-shrink:0;"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      <span style="font-size:13px;color:var(--accent);font-weight:700;">وضع التعديل — الفاتورة: <span id="edit-invoice-number"></span></span>
+      <button id="cancel-edit-btn" class="btn btn-secondary btn-sm" style="margin-right:auto;font-size:11px;">إلغاء التعديل</button>
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="section-title">العميل</div>
+      <select class="form-control" id="invoice-shop-select"><option value="">— زبون عادي (بدون حساب) —</option></select>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="section-title" style="margin:0;">المنتجات</div>
+        <button class="btn btn-primary btn-sm" id="add-product-to-invoice">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+          إضافة منتج
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:12px;">
+        <input
+          type="text"
+          class="form-control"
+          id="invoice-barcode-input"
+          placeholder="اسكان أو إدخال باركود المنتج"
+          inputmode="search"
+          autocomplete="off"
+        >
+        <button class="btn btn-secondary btn-sm" id="invoice-barcode-add-btn" type="button">
+          إضافة بالباركود
+        </button>
+      </div>
+      <div id="cart-items-list"></div>
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="section-title">التعديلات</div>
+      <div class="form-row">
+        <div class="form-group mb-0">
+          <label class="form-label">خصم (ج.م)</label>
+          <input type="number" class="form-control" id="invoice-discount" placeholder="0.00" min="0" step="0.01">
+        </div>
+      </div>
+    </div>
+    <div class="totals-box" id="invoice-totals"></div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="section-title">ملاحظة</div>
+      <textarea class="form-control" id="invoice-note" placeholder="ملاحظات اختيارية..." style="min-height:60px;"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+      <button class="btn btn-secondary btn-lg" id="reset-invoice-btn-2">إلغاء</button>
+      <button class="btn btn-success btn-lg" id="save-invoice-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+        حفظ الفاتورة
+      </button>
+    </div>
+  </div>
+
+  <!-- التقارير -->
+  <div id="page-reports" class="page" data-roles="admin">
+    <div class="page-header">
+      <h1><span>//</span> التقارير</h1>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm" onclick="Router.navigate('expenses')" data-roles="admin">💸 المصاريف</button>
+        <button class="btn btn-primary btn-sm" id="print-report-btn" data-roles="admin">🖨 طباعة</button>
+      </div>
+    </div>
+    <div class="period-btns">
+      <button class="btn btn-secondary active" data-period="today">اليوم</button>
+      <button class="btn btn-secondary" data-period="7days">7 أيام</button>
+      <button class="btn btn-secondary" data-period="month">الشهر</button>
+      <button class="btn btn-secondary" data-period="year">السنة</button>
+      <button class="btn btn-secondary" data-period="all">الكل</button>
+    </div>
+    <div class="rep-stats">
+      <div class="rep-stat"><div class="rep-stat-label">صافي المبيعات</div><div class="rep-stat-val" id="rep-net-sales">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">إجمالي التكلفة</div><div class="rep-stat-val" id="rep-total-cost">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">صافي الربح</div><div class="rep-stat-val" id="rep-net-profit">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">عدد الفواتير</div><div class="rep-stat-val" id="rep-invoice-count">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">المرتجعات</div><div class="rep-stat-val" id="rep-returns-count">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">متوسط الفاتورة</div><div class="rep-stat-val" id="rep-avg-invoice">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">التحصيل الفعلي</div><div class="rep-stat-val" id="rep-collected">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">المتبقي</div><div class="rep-stat-val" id="rep-remaining">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">مصاريف الفترة</div><div class="rep-stat-val" id="rep-expenses">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">الربح بعد المصاريف</div><div class="rep-stat-val" id="rep-operating-profit">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">هامش الربح</div><div class="rep-stat-val" id="rep-profit-margin">—</div></div>
+      <div class="rep-stat"><div class="rep-stat-label">معدل المرتجع</div><div class="rep-stat-val" id="rep-return-rate">—</div></div>
+    </div>
+    <div class="chart-container">
+      <h3>المبيعات حسب الفترة</h3>
+      <div style="height:180px;"><canvas id="reports-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-title">أكثر 10 منتجات مبيعاً</div>
+      <div id="rep-top-products"></div>
+    </div>
+  </div>
+
+  <div id="page-expenses" class="page" data-roles="admin">
+    <div class="page-header">
+      <h1><span>//</span> 💸 المصاريف</h1>
+      <button class="btn btn-secondary btn-sm" id="expenses-reset-btn">مسح النموذج</button>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="section-title">إضافة مصروف</div>
+      <form id="expense-form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">اسم المصروف</label>
+            <input type="text" class="form-control" id="expense-title" placeholder="مثال: كهرباء الفرع" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">التصنيف</label>
+            <select class="form-control" id="expense-category">
+              <option value="تشغيل">تشغيل</option>
+              <option value="نقل">نقل</option>
+              <option value="مرتبات">مرتبات</option>
+              <option value="إيجار">إيجار</option>
+              <option value="مشتريات خارجية">مشتريات خارجية</option>
+              <option value="صيانة">صيانة</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">المبلغ</label>
+            <input type="number" class="form-control" id="expense-amount" placeholder="0.00" min="0.01" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">التاريخ</label>
+            <input type="date" class="form-control" id="expense-date" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملاحظة</label>
+          <textarea class="form-control" id="expense-note" placeholder="تفاصيل إضافية..." style="min-height:60px;"></textarea>
+        </div>
+        <button class="btn btn-primary btn-full" type="submit">حفظ المصروف</button>
+      </form>
+    </div>
+
+    <div id="expenses-summary"></div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="section-title">فلترة المصاريف</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">من تاريخ</label>
+          <input type="date" class="form-control" id="expenses-filter-from">
+        </div>
+        <div class="form-group">
+          <label class="form-label">إلى تاريخ</label>
+          <input type="date" class="form-control" id="expenses-filter-to">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">التصنيف</label>
+          <select class="form-control" id="expenses-filter-category">
+            <option value="">كل التصنيفات</option>
+            <option value="تشغيل">تشغيل</option>
+            <option value="نقل">نقل</option>
+            <option value="مرتبات">مرتبات</option>
+            <option value="إيجار">إيجار</option>
+            <option value="مشتريات خارجية">مشتريات خارجية</option>
+            <option value="صيانة">صيانة</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">بحث</label>
+          <input type="text" class="form-control" id="expenses-search" placeholder="بحث بالاسم أو الملاحظة...">
+        </div>
+      </div>
+    </div>
+
+    <div id="expenses-list"></div>
+  </div>
+
+  <!-- سجل المخزون -->
+  <div id="page-stock-log" class="page" data-roles="admin,store">
+    <div class="page-header">
+      <h1><span>//</span> حركة المخزون</h1>
+      <button class="btn btn-secondary btn-sm" onclick="Router.navigate('products')">← رجوع</button>
+    </div>
+    <div class="search-bar" style="margin-bottom:12px;">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+      <select id="stocklog-product-filter" style="background:transparent;border:none;color:var(--text-primary);font-family:var(--font-main);font-size:13px;flex:1;outline:none;">
+        <option value="">كل المنتجات</option>
+      </select>
+    </div>
+    <div id="stocklog-summary"></div>
+    <div id="stocklog-list"></div>
+  </div>
+
+  <!-- التحصيلات -->
+  <div id="page-collections" class="page" data-roles="admin,cashier">
+    <div class="page-header">
+      <h1><span>//</span> 💰 المديونيات</h1>
+      <button class="btn btn-secondary btn-sm" onclick="CollectionsModule.printStatement(0)" style="display:none;">طباعة الكل</button>
+    </div>
+    <div id="collections-summary"></div>
+    <div class="search-bar">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="collections-search" placeholder="بحث باسم العميل أو رقم الهاتف...">
+    </div>
+    <div id="collections-list"></div>
+  </div>
+
+  <!-- شريط التنقل السفلي -->
+    <div id="reps-list"></div>
+  </div>
+
+  <div id="page-settings" class="page" data-roles="admin">
+    <div class="page-header">
+      <h1><span>//</span> ⚙ الإعدادات</h1>
+      <button class="btn btn-secondary btn-sm" id="settings-refresh-btn">تحديث</button>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="section-title">بيانات المتجر</div>
+      <form id="settings-store-form" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label">اسم المتجر</label>
+          <input type="text" class="form-control" id="settings-store-name" placeholder="اسم المتجر">
+        </div>
+        <div class="form-group">
+          <label class="form-label">العنوان</label>
+          <textarea class="form-control" id="settings-store-address" placeholder="العنوان" style="min-height:60px;"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">رقم الهاتف</label>
+            <input type="text" class="form-control" id="settings-store-phone" placeholder="01000000000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">تذييل الفاتورة</label>
+            <input type="text" class="form-control" id="settings-store-footer" placeholder="رسالة أسفل الفاتورة">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">حفظ بيانات المتجر</button>
+      </form>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="section-title" style="margin:0;">إدارة المستخدمين</div>
+        <button class="btn btn-secondary btn-sm" type="button" id="settings-user-add-btn">مستخدم جديد</button>
+      </div>
+      <form id="settings-user-form" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" id="settings-user-form-title">إضافة مستخدم</label>
+          <input type="text" class="form-control" id="settings-user-name" placeholder="اسم المستخدم" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" class="form-control" id="settings-user-email" placeholder="example@mail.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">رقم الموبايل</label>
+            <input type="text" class="form-control" id="settings-user-mobile" placeholder="01000000000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">الصلاحية</label>
+            <select class="form-control" id="settings-user-role">
+              <option value="cashier">مندوب</option>
+              <option value="admin">مدير</option>
+              <option value="store">مخزن</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">كلمة المرور <span style="font-size:10px;color:var(--text-muted);">(اتركها فارغة عند التعديل للإبقاء عليها)</span></label>
+            <input type="password" class="form-control" id="settings-user-password" placeholder="كلمة المرور">
+          </div>
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="settings-user-active" checked>
+          <label class="form-label" for="settings-user-active" style="margin:0;">الحساب مفعل</label>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="submit" class="btn btn-primary" id="settings-user-save-btn">حفظ المستخدم</button>
+          <button type="button" class="btn btn-secondary" id="settings-user-cancel-btn">إلغاء</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="section-title">المستخدمون الحاليون</div>
+      <div id="settings-users-list"></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <div class="section-title" style="margin:0;">سجل النشاط</div>
+        <div style="font-size:11px;color:var(--text-muted);">آخر العمليات داخل النظام</div>
+      </div>
+      <div id="settings-activity-list"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-page="dashboard">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      الرئيسية
+    </button>
+    <button class="nav-btn" data-page="products" data-roles="admin,store">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+      المنتجات
+    </button>
+    <button class="nav-btn" data-page="new-invoice" style="position:relative;" data-roles="admin,cashier">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(240,192,64,0.5);margin-top:-16px;border:3px solid var(--bg-secondary);">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:22px;height:22px;color:#0f1117;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+      </div>
+      فاتورة
+    </button>
+    <button class="nav-btn" data-page="shops">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      العملاء
+    </button>
+    <button class="nav-btn" data-page="invoices">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      الفواتير
+    </button>
+    <button class="nav-btn" data-page="collections" data-roles="admin,cashier">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      التحصيل
+    </button>
+    <button class="nav-btn" data-page="wa-invoices" data-roles="admin,cashier">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h8m-8 4h5m-7 7l-4 1 1-4m0 0l9-9a2.121 2.121 0 013 3l-9 9z"/></svg>
+      الشات
+    </button>
+  </nav>
+</div>
+
+<!-- نافذة المنتج (محدّثة) -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="product-modal-title">إضافة منتج</div>
+    <form id="product-form" autocomplete="off">
+      <div class="form-group">
+        <label class="form-label">اسم المنتج *</label>
+        <input type="text" class="form-control" id="p-name" placeholder="اسم المنتج" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">سعر البيع (ج.م) *</label>
+          <input type="number" class="form-control" id="p-price" placeholder="0.00" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">تكلفة الشراء (ج.م)</label>
+          <input type="number" class="form-control" id="p-cost" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الكمية</label>
+          <input type="number" class="form-control" id="p-quantity" placeholder="0" min="0" step="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">حد التنبيه</label>
+          <input type="number" class="form-control" id="p-minstock" placeholder="5" min="0" step="1" value="5">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الباركود</label>
+          <input type="text" class="form-control" id="p-barcode" placeholder="اختياري">
+        </div>
+        <div class="form-group">
+          <label class="form-label">التصنيف</label>
+          <input type="text" class="form-control" id="p-category" placeholder="مثال: مشروبات">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="product-modal-close">إلغاء</button>
+        <button type="submit" class="btn btn-primary">حفظ المنتج</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- نافذة العميل -->
+<div class="modal-overlay" id="shop-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="shop-modal-title">إضافة عميل</div>
+    <form id="shop-form" autocomplete="off">
+      <div class="form-group">
+        <label class="form-label">اسم العميل / المتجر *</label>
+        <input type="text" class="form-control" id="s-name" placeholder="اسم العميل" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم المسؤول</label>
+        <input type="text" class="form-control" id="s-contact" placeholder="اختياري">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الهاتف</label>
+          <input type="tel" class="form-control" id="s-phone" placeholder="+20 100 000 0000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">البريد الإلكتروني</label>
+          <input type="email" class="form-control" id="s-email" placeholder="example@mail.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">العنوان</label>
+        <textarea class="form-control" id="s-address" placeholder="العنوان..." style="min-height:60px;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="shop-modal-close">إلغاء</button>
+        <button type="submit" class="btn btn-primary">حفظ العميل</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- نافذة اختيار المنتجات -->
+<div class="modal-overlay" id="product-picker-modal">
+  <div class="modal" style="max-height:85vh;">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="modal-title" style="margin:0;">اختر المنتجات</div>
+      <button class="btn btn-secondary btn-sm" id="product-picker-done">تم ✓</button>
+    </div>
+    <div class="search-bar" style="margin-bottom:12px;">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="product-picker-search" placeholder="بحث في المنتجات...">
+    </div>
+    <div class="product-select-grid" id="product-picker-grid"></div>
+    <button class="btn btn-secondary btn-full" id="product-picker-close" style="margin-top:14px;">إغلاق</button>
+  </div>
+</div>
+
+<!-- نافذة الإيصال -->
+<div class="modal-overlay" id="print-modal">
+  <div class="modal" style="max-height:90vh;">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="modal-title" style="margin:0;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;display:inline;vertical-align:middle;margin-left:6px;"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        معاينة الفاتورة
+      </div>
+      <button class="btn btn-secondary btn-sm" id="print-modal-close">✕ إغلاق</button>
+    </div>
+    <div style="background:#fff;border-radius:8px;padding:8px;margin-bottom:16px;max-height:52vh;overflow-y:auto;box-shadow:0 2px 16px rgba(0,0,0,0.3);">
+      <div id="print-preview-area"></div>
+    </div>
+    <!-- أزرار التحكم — صف أول -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <button class="btn btn-success btn-lg" id="save-invoice-print-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M5 13l4 4L19 7"/></svg>
+        حفظ
+      </button>
+      <button class="btn btn-secondary btn-lg" id="share-receipt-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+        مشاركة
+      </button>
+    </div>
+    <!-- أزرار التحكم — صف ثاني -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button class="btn btn-primary btn-lg" id="print-receipt-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        طباعة 58mm
+      </button>
+      <button class="btn btn-secondary btn-lg" id="print-a4-btn">
+        📄 طباعة A4
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="barcode-modal">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="modal-title" style="margin:0;">معاينة الباركود</div>
+      <button class="btn btn-secondary btn-sm" id="barcode-modal-close">✕ إغلاق</button>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:10px;margin-bottom:14px;box-shadow:0 2px 16px rgba(0,0,0,0.25);">
+      <div id="barcode-preview-area"></div>
+    </div>
+    <button class="btn btn-primary btn-lg btn-full" id="barcode-print-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+      طباعة الباركود
+    </button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="batch-barcodes-modal">
+  <div class="modal" style="max-width:560px;max-height:88vh;">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div class="modal-title" style="margin:0;">طباعة باركودات جماعية</div>
+      <button class="btn btn-secondary btn-sm" id="batch-barcodes-close">✕ إغلاق</button>
+    </div>
+    <div class="search-bar" style="margin-bottom:10px;">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="batch-barcodes-search" placeholder="بحث عن منتج للطباعة الجماعية...">
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
+      <button class="btn btn-secondary btn-sm" id="batch-barcodes-select-all" type="button">تحديد الكل</button>
+      <button class="btn btn-secondary btn-sm" id="batch-barcodes-clear-all" type="button">إلغاء التحديد</button>
+    </div>
+    <div id="batch-barcodes-list" style="display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow-y:auto;margin-bottom:12px;"></div>
+    <button class="btn btn-primary btn-lg btn-full" id="batch-barcodes-print-btn" type="button">طباعة المحدد</button>
+  </div>
+</div>
+
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• Cart Drawer â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="cart-drawer-overlay" onclick="CartDrawer.close()"></div>
+<div id="cart-drawer">
+  <div id="cart-drawer-handle"></div>
+  <div id="cart-drawer-head">
+    <div>
+      <div id="cart-drawer-title">🛒 السلة</div>
+      <div id="cart-drawer-client"></div>
+    </div>
+    <button id="cart-drawer-close" onclick="CartDrawer.close()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <!-- تابز العملاء اللي عندهم سلال -->
+  <div id="cart-drawer-clients"></div>
+  <!-- قائمة المنتجات -->
+  <div id="cart-drawer-body"></div>
+  <div id="cart-drawer-footer">
+    <div id="cart-drawer-total-row">
+      <span id="cart-drawer-total-label">الإجمالي</span>
+      <span id="cart-drawer-total-val">٠.٠٠ ج.م</span>
+    </div>
+    <button id="cart-drawer-goto" onclick="CartDrawer.goToInvoice()">
+      إتمام الفاتورة ←
+    </button>
+  </div>
+</div>
+<script src="js/users-store.js" defer></script>
+<script src="js/ops-meta.js" defer></script>
+<script src="js/app.js" defer></script>
+<script src="js/barcode.js" defer></script>
+<script src="js/print.js" defer></script>
+<script src="js/cart.js" defer></script>
+<script src="js/new-invoice.js" defer></script>
+<script src="js/dashboard.js" defer></script>
+<script src="js/products.js" defer></script>
+<script src="js/shops.js" defer></script>
+<script src="js/reps.js" defer></script>
+<script src="js/invoice.js" defer></script>
+<script src="js/collections.js" defer></script>
+<script src="js/wa-invoices.js" defer></script>
+<script src="js/expenses.js" defer></script>
+<script src="js/reports.js" defer></script>
+<script src="js/stocklog.js" defer></script>
+
+<script src="js/settings.js" defer></script>
+<script src="js/smart-search.js" defer></script>
+<script src="js/backup.js" defer></script>
+
+  <script>
+    window.loadOptionalChartLibrary = (() => {
+      let chartPromise = null;
+
+      return function loadOptionalChartLibrary() {
+        if (window.Chart) return Promise.resolve(true);
+        if (chartPromise) return chartPromise;
+        if (navigator.onLine === false) return Promise.resolve(false);
+
+        chartPromise = new Promise((resolve) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+          script.async = true;
+          script.onload = () => {
+            window.dispatchEvent(new CustomEvent('nadir:chart-ready'));
+            resolve(true);
+          };
+          script.onerror = () => resolve(false);
+          document.head.appendChild(script);
+        }).finally(() => {
+          if (!window.Chart) chartPromise = null;
+        });
+
+        return chartPromise;
+      };
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      let deferredInstallPrompt = null;
+      // ساعة حية
+      function updateClock() {
+        const el = document.getElementById('dash-datetime');
+        if (el) el.textContent = new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'medium' });
+      }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    document.getElementById('print-a4-btn')?.addEventListener('click', () => {
+      if (PrintModule.currentInvoice) PrintModule.printA4(PrintModule.currentInvoice);
+    });
+      document.getElementById('backup-open-btn')?.addEventListener('click', () => BackupModule.openModal());
+      document.getElementById('smart-search-btn')?.addEventListener('click', () => SmartSearch.open());
+      document.getElementById('settings-open-btn')?.addEventListener('click', () => Router.navigate('settings'));
+      document.getElementById('dashboard-settings-btn')?.addEventListener('click', () => Router.navigate('settings'));
+
+      const installBtn = document.getElementById('install-app-btn');
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (installBtn && isStandalone) installBtn.style.display = 'none';
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        if (installBtn && !isStandalone) installBtn.style.display = '';
+      });
+
+      installBtn?.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        try { await deferredInstallPrompt.userChoice; } catch (_) {}
+        deferredInstallPrompt = null;
+        installBtn.style.display = 'none';
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        if (installBtn) installBtn.style.display = 'none';
+      });
+
+      window.loadOptionalChartLibrary?.().catch(() => {});
+    });
+  </script>
+  <script>
+    if (location.protocol !== 'file:' && 'serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        let refreshing = false;
+        const updateServiceWorker = reg => {
+          if (reg?.waiting) {
+            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        };
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+
+        navigator.serviceWorker.register('./sw.js', {scope: './'})
+          .then(reg => {
+            if (reg.waiting) updateServiceWorker(reg);
+            reg.addEventListener('updatefound', () => {
+              const worker = reg.installing;
+              if (!worker) return;
+              worker.addEventListener('statechange', () => {
+                if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                  updateServiceWorker(reg);
+                }
+              });
+            });
+          })
+          .catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
